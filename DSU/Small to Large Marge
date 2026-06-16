@@ -1,0 +1,23 @@
+vector<int> col,dis;
+vector<set<int>*> sub;
+void dfs(int i,int parent = -1){
+    int l = -1; vector<int> chi;
+    for(int node : graph[i]){
+        if(node != parent){
+            dfs(node,i); chi.push_back(node);
+            if(l == -1 || sub[l]->size() < sub[node]->size()){
+                l = node;
+            }
+        }
+    }
+    if(l == -1){sub[i] = new set<int>;}
+    else{ sub[i] = sub[l];}
+    for(int child : chi){
+        if(child == l)continue;
+        sub[i]->insert(sub[child]->begin(),sub[child]->end());
+    }
+    sub[i]->insert(col[i]);
+    dis[i] = sub[i]->size();
+} //sub.resize(n + 2, nullptr);
+//find the most frequent element in each node's subtree 
+//the pair with minimum difference in each node's subtree.
