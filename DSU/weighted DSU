@@ -1,0 +1,26 @@
+struct DSU {
+    vi rank; vii par;
+    DSU(int n){
+    par.resize(n+1);rank.resize(n+1,0);
+        for(int i = 0; i <= n; ++i){
+            par[i] = {i,0};
+        }
+    }
+    pii find(int x){
+        if(par[x].F==x)return par[x];
+        pii tmp=find(par[x].F);
+        tmp.S += par[x].S;
+        return par[x] = tmp;
+    }
+    void union_rank(int u,int v,int w) {
+        pii pu = find(u),pv = find(v);
+        if(pu.F == pv.F)return;
+        int n_w = pu.S+w-pv.S;
+        if(rank[pu.F]>=rank[pv.F]){
+        if(rank[pu.F]==rank[pv.F])rank[pu.F]++;
+            par[pv.F]={pu.F,n_w};
+        }else{
+            par[pu.F]={pv.F,-n_w};
+        }
+    }
+};
