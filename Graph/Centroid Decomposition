@@ -1,0 +1,60 @@
+const ll N = 2e5 + 123;
+ 
+vi graph[N];
+int Sz[N],tot,done[N],cenpar[N];
+void cal_sz(int node,int par){
+    tot++,Sz[node] = 1;
+    for(auto u : graph[node]){
+        if(u == par || done[u])continue;
+        cal_sz(u,node); Sz[node]+=Sz[u];
+    }
+}
+int find_cen(int node,int par){
+    for(auto u : graph[node]){
+        if(u == par || done[u])continue;
+        else if(Sz[u] > tot / 2)return find_cen(u,node);
+    }
+    return node;
+}
+void decompose(int node,int par){
+    tot = 0;cal_sz(node,par);
+    int cen = find_cen(node,par);
+    cenpar[cen] = par;done[cen] = 1;
+    for(auto u : graph[cen]){
+        if(u == par || done[u])continue;
+        decompose(u,cen);
+    }
+}
+int dep[N];
+void dfs(int node,int par){
+    for(auto u : graph[node]){
+        if(u == par)continue;
+        dep[u] = dep[node] + 1;
+        dfs(u,node);
+    }
+}
+void Goriber_solve()
+{
+    int n;
+    cin >> n;
+    for(int i = 1; i < n; i++){
+        int u,v;
+        cin >> u >> v;
+        graph[u].pb(v);
+        graph[v].pb(u);
+    }
+    decompose(1,0);
+    for(int i = 1; i <= n; i++){
+        graph[i].clear();
+    }
+    int root;
+    for(int i = 1; i <= n; i++){
+        graph[cenpar[i]].pb(i);
+        graph[i].pb(cenpar[i]);
+        if(cenpar[i] == 0)root = i;
+    }
+    dfs(root,-1);
+    for(int i = 1; i <= n; i++){
+        cout << char(dep[i] + 'A') << " ";
+    }
+}
