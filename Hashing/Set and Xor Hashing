@@ -1,0 +1,36 @@
+// Set Hashing-> ((a+k)^h + (b+k)^h + (c+k)^h)%mod
+//k like 9939733,h like 127
+//Xor Hashing-> change a to a randmon number,change b to a random num
+// hash = (a ^ b ^ c) its like (a + rand) ^ (b + rand)
+example of Xor hash->
+int num[N];
+void pre(){
+    mt19937_64 gen(random_device{}());
+    for(int i = 1; i < N; i++){
+        int r_num = uniform_int_distribution<int>{0, oo}(gen);
+        num[i] = r_num;
+    }
+    
+}
+void Goriber_solve()
+{
+    int n,q;
+    cin >> n >> q;
+    vi pre(n+2,0);
+    int k = 191,Xor = 0;
+    for(int i = 1; i <= n; i++){
+        int x;
+        cin >> x;
+        x = num[x];
+        Xor = (Xor ^ x);
+        pre[i] = Xor;
+    }
+    while(q--){
+        int l,r;
+        cin >> l >> r;
+        l--;
+        int x = (pre[r] ^ pre[l]);
+        if(x)pn;
+        else py;
+    }
+}
