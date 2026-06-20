@@ -1,6 +1,8 @@
 /// In The Name Of Allah
 
-/// mt19937 mt(chrono::steady_clock::now().time_since_epoch().count());
+//Random number generator->
+mt19937_64 gen(random_device{}());
+int r_num = uniform_int_distribution<int>{0, 1e18}(gen);
 String to number with mod / string divided with mod ?
 int multi(string s,int mod)
 {
