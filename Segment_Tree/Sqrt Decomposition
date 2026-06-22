@@ -1,26 +1,45 @@
-// input data
-int n;
-vector<int> a (n);
-
-// preprocessing
-int len = (int) sqrt (n + .0) + 1; // size of the block and the number of blocks
-vector<int> b (len);
-for (int i=0; i<n; ++i)
-    b[i / len] += a[i];
-
-// answering the queries
-while(q--) {
-    int l, r;
-  // read input data for the next query
-    int sum = 0;
-    for (int i=l; i<=r; )
-        if (i % len == 0 && i + len - 1 <= r) {
-            // if the whole block starting at i belongs to [l, r]
-            sum += b[i / len];
-            i += len;
+void Goriber_solve()
+{
+    int n, q;cin >> n >> q;
+    vector<int> a(n);
+    for(auto &i : a) cin >> i;
+    int len = (int)sqrt(n) + 1;
+    int blocks = (n + len - 1) / len;
+    vector<int> b(blocks, 0);
+    while(q--){
+        int t;
+        cin >> t;
+        if(t == 2){
+            int k;
+            cin >> k;
+            k--;
+            int block = k / len;
+            cout << a[k] + b[block] << endl;
         }
-        else {
-            sum += a[i];
-            ++i;
+        else{
+            int l, r, v;
+            cin >> l >> r >> v;
+            l--, r--;
+            int left_block = l / len;
+            int right_block = r / len;
+            if(left_block == right_block) {
+                for(int i = l; i <= r; i++) {
+                    a[i] += v;
+                }
+            }
+            else {
+                int end_left = (left_block + 1) * len - 1;
+                for(int i = l; i <= min(r, end_left); i++) {
+                    a[i] += v;
+                }
+                for(int block = left_block + 1; block <= right_block - 1; block++) {
+                    b[block] += v;
+                }
+                int start_right = right_block * len;
+                for(int i = max(l, start_right); i <= r; i++) {
+                    a[i] += v;
+                }
+            }
         }
+    }
 }
