@@ -1,23 +1,45 @@
-vector<int> col,dis;
-vector<set<int>*> sub;
-void dfs(int i,int parent = -1){
-    int l = -1; vector<int> chi;
-    for(int node : graph[i]){
-        if(node != parent){
-            dfs(node,i); chi.push_back(node);
-            if(l == -1 || sub[l]->size() < sub[node]->size()){
-                l = node;
+vi graph[N];
+unordered_map<int,int> bd[N];
+int col[N],ans[N],mx[N];
+ 
+void dfs(int node,int par){
+    bd[node][col[node]] = 1;
+    mx[node] = 1,ans[node] = col[node];
+    for(auto &u : graph[node]){
+        if(u == par)continue;
+        dfs(u,node);
+        if(sz(bd[node]) < sz(bd[u])){
+            swap(bd[node],bd[u]);
+            mx[node] = mx[u];
+            ans[node] = ans[u];
+        }
+        for(auto &[c, cnt] : bd[u]){
+            bd[node][c] += cnt;
+            if(bd[node][c] > mx[node]){
+                mx[node] = bd[node][c];
+                ans[node] = c;
+            }
+            else if(bd[node][c] == mx[node]){
+                ans[node] += c;
             }
         }
+        bd[u].clear();
     }
-    if(l == -1){sub[i] = new set<int>;}
-    else{ sub[i] = sub[l];}
-    for(int child : chi){
-        if(child == l)continue;
-        sub[i]->insert(sub[child]->begin(),sub[child]->end());
+}
+void Goriber_solve(){
+    int n;
+    cin >> n;
+    for(int i = 1; i <= n; i++){
+        cin >> col[i];
     }
-    sub[i]->insert(col[i]);
-    dis[i] = sub[i]->size();
-} //sub.resize(n + 2, nullptr);
-//find the most frequent element in each node's subtree 
-//the pair with minimum difference in each node's subtree.
+    for(int i = 1; i < n; i++){
+        int u,v;
+        cin >> u >> v;
+        graph[u].pb(v);
+        graph[v].pb(u);
+    }
+    dfs(1,-1);
+    for(int i = 1; i <= n; i++){
+        cout << ans[i] << " ";
+    }
+}
